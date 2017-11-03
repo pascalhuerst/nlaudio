@@ -12,6 +12,7 @@
 #include <memory>
 
 #include "common/bufferstatistics.h"
+#include "audio/samplespecs.h"
 
 namespace Nl {
 
@@ -232,6 +233,19 @@ public:
 	 * \endcode
 	 */
 	virtual BufferStatistics getStats() = 0;
+
+    /** \ingroup Audio
+     *
+     * \brief Returns current sample specs on interface
+     *
+     * This function returns a \ref SampleSpecs object. This can be used to print
+     * infromation about sample rate, sample format, ...
+     * \code{.cpp}
+     *  std::cout << "Specs: " << std::endl << handle->getSpecs() << std::endl;
+     * \endcode
+     */
+    virtual SampleSpecs getSpecs() = 0;
+
 
 };
 

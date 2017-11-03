@@ -78,8 +78,6 @@ public:
     {
         init(sampleSpecs.buffersizeInBytes);
         m_sampleSpecs = sampleSpecs;
-
-		printf("bufferinit: %i\n", sampleSpecs.buffersizeInBytes);
     }
 
 	/** \ingroup Audio
@@ -129,14 +127,12 @@ public:
     {
         if (!m_buffer) {
             std::cout << "Buffer (" << m_name << ") not initialized!" << std::endl;
-            //exit(-1);
         }
 
         std::unique_lock<std::mutex> mlock(m_mutex);
 		while (availableToWrite() < size || !m_buffer) {
             m_condition.wait(mlock);
         }
-
 
         m_bytesWritten += size;
 
@@ -187,11 +183,10 @@ public:
 	*/
     inline unsigned int availableToWrite() const
     {
-        //TODO: This is not really bullet proove, check again!!!
-		int tmp = m_readIndex - m_writeIndex - 1;
-		int distance = tmp < 0 ? -tmp : tmp;
+        int tmp = m_readIndex - m_writeIndex;
+        int distance = tmp < 0 ? -tmp : tmp;
 
-		return m_writeIndex < m_readIndex ? distance : m_size - distance;
+        return m_writeIndex < m_readIndex ? distance : m_size - distance;
     }
 
 	/** \ingroup Audio

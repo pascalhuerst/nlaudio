@@ -4,6 +4,7 @@
 #include <audio/audioalsaoutput.h>
 #include <audio/audioalsaexception.h>
 #include <audio/audiofactory.h>
+#include <audio/samplespecs.h>
 
 #include <common/stopwatch.h>
 #include <common/tools.h>
@@ -32,14 +33,6 @@ int main()
             return fd;
         }
 
-        auto availableDevices = Nl::getDetailedCardInfos();
-        for(auto it=availableDevices.begin(); it!=availableDevices.end(); ++it)
-            std::cout << *it << std::endl;
-
-        auto availableDevs = Nl::AlsaCardIdentifier::getCardIdentifiers();
-        for (auto it=availableDevs.begin(); it!=availableDevs.end(); ++it)
-            std::cout << *it << std::endl;
-
         Nl::AlsaCardIdentifier audioIn(0,0,0, "USB Device");
 
         const int buffersize = 1024;
@@ -49,13 +42,15 @@ int main()
 
         Nl::ControlInterface ci(handle);
         Nl::CommandDescriptor cd1;
-        cd1.cmd = "size";
-        cd1.func = [](std::vector<std::string> args, Nl::JobHandle jobHandle, int sockfd, Nl::ControlInterface *ptr) { std::stringstream s; s << jobHandle.audioInput->getStats(); write(sockfd, s.str().c_str(), s.str().size()); };
+        cd1.cmd = "specs";
+        cd1.func = [](std::vector<std::string> args, Nl::JobHandle jobHandle, int sockfd, Nl::ControlInterface *ptr) { std::stringstream s; s<<toJSON(jobHandle.audioInput->getSpecs()); write(sockfd, s.str().c_str(), s.str().size()); };
         ci.addCommand(cd1);
+
         Nl::CommandDescriptor cd2;
-        cd2.cmd = "stat";
-        cd2.func = [](std::vector<std::string> args, Nl::JobHandle jobHandle, int sockfd, Nl::ControlInterface *ptr) { std::stringstream s; s << jobHandle.audioInput->getStats(); write(sockfd, s.str().c_str(), s.str().size());  };
+        cd2.cmd = "stats";
+        cd2.func = [](std::vector<std::string> args, Nl::JobHandle jobHandle, int sockfd, Nl::ControlInterface *ptr) { std::stringstream s; s<<toJSON(jobHandle.audioInput->getStats()); write(sockfd, s.str().c_str(), s.str().size()); };
         ci.addCommand(cd2);
+
         ci.start();
 
         while(::getchar() != 'q')

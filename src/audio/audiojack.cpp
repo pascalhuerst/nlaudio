@@ -1,7 +1,8 @@
 #include "audio/audiojack.h"
 #include "common/blockingcircularbuffer.h"
 #include "audio/alsa/alsacardidentifier.h"
-
+#include "common/bufferstatistics.h"
+#include "audio/samplespecs.h"
 
 namespace Nl {
 
@@ -141,7 +142,15 @@ channelcount_t AudioJack::getChannelCount()
 BufferStatistics AudioJack::getStats()
 {
 	//TODO: Implement me!!
+    return { 0, 0, 0 };
 }
+
+SampleSpecs AudioJack::getSpecs()
+{
+    //TODO: implement me!!
+    return  { 0 };
+}
+
 
 //static
 int AudioJack::worker(jack_nframes_t nframes, void *arg)

@@ -4,6 +4,7 @@
 #include "common/bufferstatistics.h"
 #include "audio/alsa/alsacardidentifier.h"
 #include "common/blockingcircularbuffer.h"
+#include "audio/samplespecs.h"
 
 #include <jack/jack.h>
 
@@ -43,6 +44,8 @@ public:
 	virtual channelcount_t getChannelCount();
 
 	virtual BufferStatistics getStats();
+
+    virtual SampleSpecs getSpecs();
 
 protected:
 	bool m_isInput;

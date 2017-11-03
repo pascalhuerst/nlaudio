@@ -91,7 +91,6 @@ void ControlInterface::addCommand(const CommandDescriptor &cd)
     m_commands.push_back(CommandDescriptor(cd));
 }
 
-
 //static
 void ControlInterface::help(std::vector<std::string> args, JobHandle jobHandle, int sockfd, ControlInterface *ptr)
 {
@@ -109,8 +108,8 @@ void ControlInterface::run(ControlInterface *ptr)
     //Create socket
     int sockfd = ::socket(AF_UNIX, SOCK_STREAM, 0);
     if (sockfd < 0) {
-        std::cerr << "Can not create to socket" << std::endl;
         ptr->m_terminateRequest.store(true);
+        throw ControlInterfaceException(__PRETTY_FUNCTION__, __FILE__, __LINE__, errno, "Can not create to socket");
     }
 
     union {
@@ -122,15 +121,15 @@ void ControlInterface::run(ControlInterface *ptr)
     sa.un.sun_family = AF_UNIX;
     strncpy(sa.un.sun_path, "/tmp/nlaudio.sock", sizeof(sa.un.sun_path));
 
-    if (bind(sockfd, &sa.sa, sizeof(sa)) < 0) {
-        std::cerr << "Can not bin to socket: " << ::strerror(errno) << std::endl;
+    if (::bind(sockfd, &sa.sa, sizeof(sa)) < 0) {
         ptr->m_terminateRequest.store(true);
         close(sockfd);
+        throw ControlInterfaceException(__PRETTY_FUNCTION__, __FILE__, __LINE__, errno, "Can not bind to socket");
     }
 
     if(::listen(sockfd, 5) < 0) {
         ptr->m_terminateRequest.store(true);
-        std::cerr << "Can not listen to socket: " << ::strerror(errno) << std::endl;
+        throw ControlInterfaceException(__PRETTY_FUNCTION__, __FILE__, __LINE__, errno, "Can not listen to socket");
     }
 
     timeval tv;

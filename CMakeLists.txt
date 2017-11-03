@@ -11,7 +11,7 @@ option(BUILD_EXAMPLES "Build Examples" ON)
 
 include(FindPkgConfig)
 
-set(LIBS alsa jack)
+set(LIBS alsa jack flac)
 find_package(Threads) # pthread
 
 ####################

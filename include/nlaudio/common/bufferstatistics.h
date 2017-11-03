@@ -2,6 +2,7 @@
 
 // Input Output forward declaration
 #include <iosfwd>
+#include "common/json.hpp"
 
 namespace Nl {
 
@@ -17,6 +18,10 @@ struct BufferStatistics {
 	unsigned int xrunCount; ///< Number of over-/underflows
 };
 
+void to_json(nlohmann::json& j, const BufferStatistics& s);
+void from_json(const nlohmann::json& j, BufferStatistics& s);
+
 std::ostream& operator<<(std::ostream& lhs, const BufferStatistics& rhs);
+nlohmann::json toJSON(const BufferStatistics& ss);
 
 } // namespace Nl

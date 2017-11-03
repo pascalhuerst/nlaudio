@@ -17,11 +17,9 @@ void AudioAlsaInput::start()
 	throwOnDeviceClosed(__FILE__, __func__, __LINE__);
 	resetTerminateRequest();
 
-	SampleSpecs specs = basetype::getSpecs();
+    SampleSpecs specs = basetype::getSpecs();
 
-	init();
-
-	std::cout << "NlAudioAlsaInput Specs: " << std::endl << specs;
+	init();	
 
 	m_audioThread = new std::thread(AudioAlsaInput::worker, specs, this);
 }

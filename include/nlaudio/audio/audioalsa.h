@@ -48,6 +48,7 @@ public:
 	virtual channelcount_t getChannelCount();
 
 	virtual BufferStatistics getStats();
+    virtual SampleSpecs getSpecs();
 
 protected:
 	void openCommon();
@@ -57,7 +58,6 @@ protected:
 	void setTerminateRequest() { m_requestTerminate.store(true); }
 	void resetTerminateRequest() { m_requestTerminate.store(false); }
 	bool getTerminateRequest() const { return m_requestTerminate; }
-	SampleSpecs getSpecs();
 
 	static int xrunRecovery(AudioAlsa *ptr, int err);
 
